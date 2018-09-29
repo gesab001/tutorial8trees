@@ -32,12 +32,10 @@ class BSTMap:
 		assert node is not None, "Invalid map key."
 		return node.value
 
-	def valueOfRange(self, nodes, min, max):
+	def valueOfRange(self, nodes):
 		for key in listofnodes:
-		    node = self._bstSearch(self._root, key)
-		    if node.value.key> min and node.value.key<max:
-		         dict[node.value.key] = node.value.value
-		         assert node is not None, "Invalid map key."
+			node = self._bstSearch(self._root, key)
+			dict[key] = node.value
 		return dict
 
 
@@ -55,13 +53,27 @@ class BSTMap:
 	def _bstSearchRange(self, subtree, min, max):
 		if subtree is None:
 			return None
-		elif subtree.key > min:
+		if subtree.key >= min and subtree.key <= max:
 			listofnodes.append(subtree.key)
-			return self._bstSearchRange(subtree.left, min, max)
-		elif subtree.key < max:
-			listofnodes.append(subtree.key)
-			return self._bstSearchRange(subtree.right, min, max)
+		self._bstSearchRange(subtree.right, min, max)
+		self._bstSearchRange(subtree.left, min, max)
 		return listofnodes
+
+	def _bstMinimum( self, subtree ):
+		if subtree is None :
+			return None
+		elif subtree.left is None :
+			return subtree
+		else :
+			return self._bstMinimum( subtree.left )
+
+	def _bstMaximum( self, subtree ):
+		if subtree is None :
+			return None
+		elif subtree.right is None :
+			return subtree
+		else :
+			return self._bstMaximum( subtree.right )
 
 class _BSTMapNode :
 	def __init__( self, key, value ):
@@ -70,32 +82,40 @@ class _BSTMapNode :
 		self.left = None
 		self.right = None
 
-prices = []
-treemap = BSTMap()
-treenode = _BSTMapNode(1,2)
-treenode2 = _BSTMapNode(2,22)
-treenode3 = _BSTMapNode(3,27)
-treenode4 = _BSTMapNode(4,28)
-treenode5 = _BSTMapNode(5,20)
-treenode6 = _BSTMapNode(20,20)
+numberslist = [60,25,100,35,17,80]
+
+bst = BSTMap()
+bst.add(5,"glasses")
+bst.add(11,"strawberry")
+bst.add(1,"shoes")
+bst.add(10,"banana")
+bst.add(7,"apple")
+bst.add(2,"pants")
+bst.add(3,"candy")
+bst.add(9,"mango")
+
+bst.add(6,"dress")
+bst.add(4,"hat")
+bst.add(8,"orange")
+bst.add(13,"ball")
 
 
-treemap.add(1,treenode)
-treemap.add(2,treenode2)
-treemap.add(3,treenode3)
-treemap.add(4,treenode4)
-treemap.add(5,treenode5)
-treemap.add(6,treenode3)
-treemap.add(7,treenode2)
-treemap.add(8,treenode4)
-treemap.add(9,treenode5)
-treemap.add(10,treenode6)
+searchitem = bst._bstSearch(bst._root,5)
+print("item found: " + searchitem.value)
 
+min = bst._bstMinimum(bst._root) #searches for the minimum value in the bstmap
+max = bst._bstMaximum(bst._root) #searches for the maximum value in the bstmap
 
-#print("size: " + str(treemap.size))
-#pricerange = []
+print("min: " + min.value)
+print("max: " + max.value)
+print("root: " + bst._root.value)
 
-nodesinrangelist = treemap._bstSearchRange(treemap._root, 9, 11)
-dictionaryofvalues = treemap.valueOfRange(nodesinrangelist, 0, 5)
-print(listofnodes)
-print(dictionaryofvalues)
+minrange = 5  #enter minimum range to search
+maxrange = 10 #enter maximum range to search
+itemsinrange = bst._bstSearchRange(bst._root,minrange,maxrange) #searches for keys within the specified range
+itemsinrange.sort() #sorts the list of items
+valuesofitems = bst.valueOfRange(itemsinrange) #gets the keys and specified values in dictionary format
+
+print("keys found in range: " + str(itemsinrange)) #prints the search results
+print("item values: " + str(valuesofitems)) #prints the keys and values
+
